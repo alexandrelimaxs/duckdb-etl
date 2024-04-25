@@ -1,0 +1,8 @@
+duckdb/__pycache__
+duckdb/bin
+duckdb/etc
+duckdb/include
+duckdb/lib
+duckdb/lib64
+duckdb/share
+duckdb/pyvenv.cfg
