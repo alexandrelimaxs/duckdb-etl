@@ -27,9 +27,3 @@ class DateETL(DuckDBBaseETL):
         )
         
         return df
-
-
-
-dim_date = DateETL('orders_export','sales.dim_date',['sales_date_id'])
-
-dim_date.execute()

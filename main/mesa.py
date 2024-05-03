@@ -6,7 +6,7 @@ hook = DuckDBHook()
 
 
 query = """
-select * from sales.sales
+
 """
 
 print(hook.sql(query))
