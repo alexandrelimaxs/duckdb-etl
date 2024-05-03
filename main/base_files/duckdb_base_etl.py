@@ -5,7 +5,7 @@ from .duckdb_hook import DuckDBHook
 
 class DuckDBBaseETL():
 
-    def __init__(self, source_table:str, table_name:str, primary_key:str):
+    def __init__(self, source_table:str, table_name:str, primary_key:list):
 
         self.hook = DuckDBHook()
         self.source_table = source_table
@@ -37,7 +37,8 @@ class DuckDBBaseETL():
         print("Exporting transformed data...")
 
         self.columns = list(df.columns)
-        self.columns.remove(self.primary_key.upper())
+        for pk in self.primary_key:
+            self.columns.remove(pk.upper())
         df.write_parquet(self.path)
 
     def load_temp_table(self, create_table:bool = False):
@@ -61,14 +62,24 @@ class DuckDBBaseETL():
 
         update_columns = '\nAND\n'.join(update_columns)
 
+        primary_columns = []
+
+        for pk_columns in self.primary_key:
+            primary_columns.append(f'{pk_columns} = EXCLUDED.{pk_columns}')
+
+        primary_columns = '\nAND\n'.join(primary_columns)
+
         query = f"""
         INSERT INTO 
             {self.table_name}
         BY NAME 
             (SELECT * FROM {self.table_name}_temp)
-        ON CONFLICT DO UPDATE SET {update_columns} WHERE {self.primary_key} = EXCLUDED.{self.primary_key} AND {self.primary_key} > EXCLUDED.{self.primary_key}
+        ON CONFLICT DO UPDATE SET {update_columns} WHERE {primary_columns} AND {self.primary_key[0]} > EXCLUDED.{self.primary_key[0]}
         ;
         """
+
+        print(query)
+
 
         self.hook.sql(query)
 
