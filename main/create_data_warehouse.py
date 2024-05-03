@@ -1,5 +1,5 @@
-from duckdb_hook import duckdb_hook
+from main.base_files.duckdb_base_etl import DuckDBHook
 
-banco = duckdb_hook()
+banco = DuckDBHook()
 
 banco.execute_dump_sql('main/sql_files/create_data_warehouse.sql')

@@ -1,13 +1,13 @@
 import duckdb
 
 
-class duckdb_hook():
+class DuckDBHook():
 
     def __init__(self, database = 'database/data_warehouse') -> None:
 
         self.cursor = duckdb.connect(database)
 
-    def execute_dump_sql(self, path) -> None:
+    def execute_dump_sql(self, path:str) -> None:
 
         file = open(path, 'r')
         file = file.read()
@@ -18,7 +18,11 @@ class duckdb_hook():
                 print(f'Executing: {sql_clause}')
                 self.cursor.sql(sql_clause)
 
-    def sql(self, sql):
+    def sql(self, sql:str):
 
-        self.cursor.sql(sql)
+        return self.cursor.sql(sql)
+
+    def execute(self, sql:str):
+
+        return self.cursor.execute(sql)
 
